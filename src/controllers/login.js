@@ -1,9 +1,7 @@
 const Joi = require('joi');
-const jwt = require('jsonwebtoken');
 const httpStatus = require('../utils/httpStatus');
 const { userService } = require('../services');
-
-const { JWT_SECRET } = process.env;
+const { createToken } = require('../auth/token');
 
 const validateLogin = (body) =>
   Joi.object({
@@ -25,8 +23,7 @@ module.exports = async (req, res) => {
     return res.status(httpStatus.BAD_REQ).json({ message: 'Invalid fields' });
   }
 
-  const payload = { email };
-  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
-  
+  const token = await createToken(email);
+
   res.status(httpStatus.OK).json({ token });
 };
