@@ -4,7 +4,18 @@ const httpStatus = require('../utils/httpStatus');
 
 const getUsers = async (_req, res) => {
   const users = await userService.getUsers();
-  res.status(200).json(users);
+  res.status(httpStatus.OK).json(users);
+};
+
+const getUserById = async (req, res) => {
+  const { id } = req.params;
+  const user = await userService.getUserById(id);
+
+  if (!user) {
+    return res.status(httpStatus.NOT_FOUND).json({ message: 'User does not exist' });
+  }
+
+  res.status(httpStatus.OK).json(user);
 };
 
 const createUser = async (req, res) => {
@@ -27,5 +38,6 @@ const createUser = async (req, res) => {
 
 module.exports = {
   getUsers,
+  getUserById,
   createUser,
 };
