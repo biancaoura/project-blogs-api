@@ -1,11 +1,13 @@
 const express = require('express');
 require('express-async-errors');
 const controllers = require('./controllers');
-const errorHandling = require('./middlewares/errorHandling');
+const { errorHandling, validateToken } = require('./middlewares');
 
 const app = express();
 
 app.use(express.json());
+
+app.get('/user', validateToken, controllers.getUsers);
 
 app.post('/login', controllers.login);
 app.post('/user', controllers.createUser);

@@ -9,6 +9,16 @@ const jwtConfig = {
 
 const createToken = async (payload) => jwt.sign({ payload }, secret, jwtConfig);
 
+const validateToken = (token) => {
+  try {
+    return jwt.verify(token, secret);
+  } catch (e) {
+    console.error(e.message);
+    return null;
+  }
+};
+
 module.exports = {
   createToken,
+  validateToken,
 };
