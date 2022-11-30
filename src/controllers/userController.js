@@ -1,23 +1,13 @@
-const Joi = require('joi');
 const { createToken } = require('../auth/token');
 const { userService } = require('../services');
 const httpStatus = require('../utils/httpStatus');
 
-const validateUserSchema = (body) =>
-  Joi.object({
-    displayName: Joi.string().min(8).required(),
-    email: Joi.string().email(),
-    password: Joi.string().min(6).required(),
-    image: Joi.string(),
-  }).validate(body);
+const getUsers = async (_req, res) => {
+  const users = await userService.getUsers();
+  res.status(200).json(users);
+};
 
-module.exports = async (req, res) => {
-  const { error } = validateUserSchema(req.body);
-  
-  if (error) {
-    return res.status(httpStatus.BAD_REQ).json({ message: error.message });
-  }
-
+const createUser = async (req, res) => {
   const { email } = req.body;
 
   const isUserDuplicated = await userService.getUserByEmail(email);
@@ -33,4 +23,9 @@ module.exports = async (req, res) => {
   const token = await createToken(email);
 
   res.status(httpStatus.CREATED).json({ token });
+};
+
+module.exports = {
+  getUsers,
+  createUser,
 };
