@@ -8,9 +8,12 @@ const getUserById = (id) => User.findByPk(id, { attributes: { exclude: ['passwor
 
 const createUser = (body) => User.create(body);
 
+const deleteUser = (id) => User.destroy({ where: { id } });
+
 module.exports = {
   getUsers,
   getUserByEmail,
   getUserById,
   createUser,
+  deleteUser,
 };

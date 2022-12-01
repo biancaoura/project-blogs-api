@@ -1,4 +1,5 @@
-const { postService, categoryService, userService } = require('../services');
+const { postService, categoryService } = require('../services');
+const getUserId = require('../helpers/getUserId');
 const httpStatus = require('../utils/httpStatus');
 
 const getPosts = async (_req, res) => {
@@ -19,10 +20,10 @@ const getPostById = async (req, res) => {
   res.status(httpStatus.OK).json(post);
 };
 
-const getUserId = async (email) => {
-  const userData = await userService.getUserByEmail(email);
-  return userData.dataValues.id;
-};
+// const getUserId = async (email) => {
+//   const userData = await userService.getUserByEmail(email);
+//   return userData.dataValues.id;
+// };
 
 const createPost = async (req, res) => {
   const { title, content, categoryIds } = req.body;       

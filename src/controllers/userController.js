@@ -1,4 +1,5 @@
 const { createToken } = require('../auth/token');
+const getUserId = require('../helpers/getUserId');
 const { userService } = require('../services');
 const httpStatus = require('../utils/httpStatus');
 
@@ -36,8 +37,17 @@ const createUser = async (req, res) => {
   res.status(httpStatus.CREATED).json({ token });
 };
 
+const deleteUser = async (req, res) => {
+  const userId = await getUserId(req.decoded.payload);
+
+  await userService.deleteUser(userId);
+  
+  res.status(httpStatus.NO_CONTENT).end();
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
+  deleteUser,
 };
