@@ -8,6 +8,13 @@ const getPosts = () => BlogPost.findAll({
   ],
 });
 
+const getPostById = (id) => BlogPost.findByPk(id, {
+  include: [
+    { model: User, as: 'user', attributes: { exclude: ['password'] } },
+    { model: Category, as: 'categories', through: { attributes: [] } },
+  ],
+});
+
 const createPost = async (userId, title, content, categoryIds) => {
   try {
     const newPost = await sequelize.transaction(async (t) => {
@@ -30,5 +37,6 @@ const createPost = async (userId, title, content, categoryIds) => {
 
 module.exports = {
   getPosts,
+  getPostById,
   createPost,
 };

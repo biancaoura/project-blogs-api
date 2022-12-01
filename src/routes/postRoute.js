@@ -6,6 +6,7 @@ const { postController } = require('../controllers');
 const { validateToken, validatePost } = require('../middlewares');
 
 router.get('/', validateToken, postController.getPosts);
+router.get('/:id', validateToken, postController.getPostById);
 
 router.post('/', validateToken, validatePost, postController.createPost);
 
