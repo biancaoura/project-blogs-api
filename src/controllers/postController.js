@@ -1,6 +1,12 @@
 const { postService, categoryService, userService } = require('../services');
 const httpStatus = require('../utils/httpStatus');
 
+const getPosts = async (_req, res) => {
+  const posts = await postService.getPosts();
+  
+  res.status(httpStatus.OK).json(posts);
+};
+
 const createPost = async (req, res) => {
   const { title, content, categoryIds } = req.body;       
   
@@ -21,5 +27,6 @@ const createPost = async (req, res) => {
 };
 
 module.exports = {
+  getPosts,
   createPost,
 };
