@@ -20,10 +20,21 @@ const getPostById = async (req, res) => {
   res.status(httpStatus.OK).json(post);
 };
 
-// const getUserId = async (email) => {
-//   const userData = await userService.getUserByEmail(email);
-//   return userData.dataValues.id;
-// };
+const getPostByQuery = async (req, res) => {
+  const { q } = req.query;
+  const posts = await postService.getPosts();
+
+  if (!q) return res.status(200).json(posts);
+
+  const query = q.toLowerCase();
+  const searchResults = posts
+    .map(({ dataValues: { title, content }, dataValues }) =>
+      (title.toLowerCase().includes(query) || content.toLowerCase().includes(query)
+        ? dataValues : null))
+    .filter((el) => el !== null);
+
+  res.status(200).json(searchResults);
+};
 
 const createPost = async (req, res) => {
   const { title, content, categoryIds } = req.body;       
@@ -89,6 +100,7 @@ const deletePost = async (req, res) => {
 module.exports = {
   getPosts,
   getPostById,
+  getPostByQuery,
   createPost,
   updatePost,
   deletePost,
