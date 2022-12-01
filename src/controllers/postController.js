@@ -41,22 +41,26 @@ const createPost = async (req, res) => {
   res.status(httpStatus.CREATED).json(newPost);
 };
 
+const getPostAuthorId = async (postId) => {
+  const doesPostExist = await postService.getPostById(postId);
+
+  if (!doesPostExist) return { error: httpStatus.NOT_FOUND, message: 'Post does not exist' };
+
+  const authorId = doesPostExist.dataValues.userId;
+  return { authorId };
+};
+
 const updatePost = async (req, res) => {
   const { id: postId } = req.params;
 
   const userId = await getUserId(req.decoded.payload);
 
-  const doesPostExist = await postService.getPostById(postId);
-
-  if (!doesPostExist) {
-    return res.status(httpStatus.NOT_FOUND).json({ message: 'Post does not exist' });
-  }
-
-  const authorId = doesPostExist.dataValues.userId;
+  const { error, message, authorId } = await getPostAuthorId(postId);
+  if (error) return res.status(error).json({ message });
 
   if (userId !== authorId) { 
     return res.status(httpStatus.UNAUTHORIZED).json({ message: 'Unauthorized user' });
-    }
+  }
   
   await postService.updatePost(postId, req.body);
 
@@ -65,9 +69,26 @@ const updatePost = async (req, res) => {
   return res.status(httpStatus.OK).json(updatedPost);
 };
 
+const deletePost = async (req, res) => {
+  const { id: postId } = req.params;
+
+  const userId = await getUserId(req.decoded.payload);
+
+  const { error, message, authorId } = await getPostAuthorId(postId);
+  if (error) return res.status(error).json({ message });
+
+  if (userId !== authorId) { 
+    return res.status(httpStatus.UNAUTHORIZED).json({ message: 'Unauthorized user' });
+  }
+  await postService.deletePost(postId);
+
+  res.status(httpStatus.NO_CONTENT).end();
+};
+
 module.exports = {
   getPosts,
   getPostById,
   createPost,
   updatePost,
+  deletePost,
 };
