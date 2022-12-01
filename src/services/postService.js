@@ -35,8 +35,12 @@ const createPost = async (userId, title, content, categoryIds) => {
   }
 };
 
+const updatePost = (id, { title, content }) =>
+  BlogPost.update({ title, content }, { where: { id } });
+
 module.exports = {
   getPosts,
   getPostById,
   createPost,
+  updatePost,
 };

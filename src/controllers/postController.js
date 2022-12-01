@@ -19,6 +19,11 @@ const getPostById = async (req, res) => {
   res.status(httpStatus.OK).json(post);
 };
 
+const getUserId = async (email) => {
+  const userData = await userService.getUserByEmail(email);
+  return userData.dataValues.id;
+};
+
 const createPost = async (req, res) => {
   const { title, content, categoryIds } = req.body;       
   
@@ -30,16 +35,39 @@ const createPost = async (req, res) => {
     return res.status(httpStatus.BAD_REQ).json({ message: 'one or more "categoryIds" not found' }); 
   }
   
-  const email = req.decoded.payload;
-  const userData = await userService.getUserByEmail(email);
-  const userId = userData.dataValues.id;
+  const userId = await getUserId(req.decoded.payload);
   const newPost = await postService.createPost(userId, title, content, categoryIds);
   
   res.status(httpStatus.CREATED).json(newPost);
+};
+
+const updatePost = async (req, res) => {
+  const { id: postId } = req.params;
+
+  const userId = await getUserId(req.decoded.payload);
+
+  const doesPostExist = await postService.getPostById(postId);
+
+  if (!doesPostExist) {
+    return res.status(httpStatus.NOT_FOUND).json({ message: 'Post does not exist' });
+  }
+
+  const authorId = doesPostExist.dataValues.userId;
+
+  if (userId !== authorId) { 
+    return res.status(httpStatus.UNAUTHORIZED).json({ message: 'Unauthorized user' });
+    }
+  
+  await postService.updatePost(postId, req.body);
+
+  const updatedPost = await postService.getPostById(postId);
+
+  return res.status(httpStatus.OK).json(updatedPost);
 };
 
 module.exports = {
   getPosts,
   getPostById,
   createPost,
+  updatePost,
 };
