@@ -4,7 +4,7 @@ module.exports = {
       [
         {
           id: 1,
-          title: 'Best dogs breeds for hunting',
+          title: 'Best dog breeds for hunting',
           content: 'Here are the best hunting companions',
           user_id: 1,
           published: new Date('2011-08-01T19:58:00.000Z'),
