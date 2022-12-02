@@ -4,16 +4,16 @@ module.exports = {
       [
         {
           id: 1,
-          title: 'Post do Ano',
-          content: 'Melhor post do ano',
+          title: 'Best dogs breeds for hunting',
+          content: 'Here are the best hunting companions',
           user_id: 1,
           published: new Date('2011-08-01T19:58:00.000Z'),
           updated: new Date('2011-08-01T19:58:51.000Z'),
         },
         {
           id: 2,
-          title: 'Vamos que vamos',
-          content: 'Foguete não tem ré',
+          title: 'Great books about the Silk Road',
+          content: 'These are some must-read books about the Silk Road',
           user_id: 1,
           published: new Date('2011-08-01T19:58:00.000Z'),
           updated: new Date('2011-08-01T19:58:51.000Z'),
