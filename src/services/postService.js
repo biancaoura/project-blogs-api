@@ -22,12 +22,13 @@ const createPost = async (userId, title, content, categoryIds) => {
         { transaction: t });
     
       const newPostCategory = categoryIds.map((categoryId) =>
-      PostCategory.create({ postId: post.id, categoryId }, { transaction: t }));
+      PostCategory.create({ postId: post.id, categoryId },
+        { transaction: t }));
 
       await Promise.all(newPostCategory);
       return post;
     });
-    
+
     return newPost;
   } catch (e) {
     console.error(e.message);

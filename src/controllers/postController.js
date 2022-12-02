@@ -24,9 +24,10 @@ const getPostByQuery = async (req, res) => {
   const { q } = req.query;
   const posts = await postService.getPosts();
 
-  if (!q) return res.status(200).json(posts);
+  if (!q) return res.status(httpStatus.OK).json(posts);
 
   const query = q.toLowerCase();
+
   const searchResults = posts
     .map(({ dataValues: { title, content }, dataValues }) =>
       (title.toLowerCase().includes(query) || content.toLowerCase().includes(query)
@@ -44,7 +45,7 @@ const createPost = async (req, res) => {
   const isIdValid = categoryIds.every((id) => existingIds.includes(id));
 
   if (!isIdValid) { 
-    return res.status(httpStatus.BAD_REQ).json({ message: 'one or more "categoryIds" not found' }); 
+    return res.status(httpStatus.BAD_REQ).json({ message: 'One or more "categoryIds" not found' }); 
   }
   
   const userId = await getUserId(req.decoded.payload);
